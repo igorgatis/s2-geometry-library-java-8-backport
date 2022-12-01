@@ -40,6 +40,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
@@ -505,7 +506,7 @@ public class S2DensityTreeTest extends GeometryTestCase {
   private static Map<S2CellId, Long> sumToRoot(Map<S2CellId, Long> bases) {
     return bases.keySet().stream()
         .flatMap(cell -> IntStream.range(0, cell.level() + 1)
-            .mapToObj(level -> Map.entry(cell.parent(level), bases.get(cell))))
+            .mapToObj(level -> new AbstractMap.SimpleEntry<S2CellId, Long>(cell.parent(level), bases.get(cell))))
         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, Long::sum));
   }
 
