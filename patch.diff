@@ -1,0 +1,47 @@
+diff --git a/pom.xml b/pom.xml
+index 8b9e6a5..fdc6089 100644
+--- a/pom.xml
++++ b/pom.xml
+@@ -43,6 +43,11 @@
+ 
+   <build>
+   <plugins>
++    <plugin>
++      <groupId>org.apache.maven.plugins</groupId>
++      <artifactId>maven-compiler-plugin</artifactId>
++      <version>3.7.0</version>
++    </plugin>
+     <plugin>
+       <groupId>org.codehaus.mojo</groupId>
+       <artifactId>flatten-maven-plugin</artifactId>
+@@ -75,8 +80,7 @@
+ 
+   <properties>
+     <revision>HEAD-SNAPSHOT</revision>
+-    <maven.compiler.source>11</maven.compiler.source>
+-    <maven.compiler.target>11</maven.compiler.target>
++    <maven.compiler.release>8</maven.compiler.release>
+     <guava.version>29.0-jre</guava.version>
+     <jsr305.version>3.0.2</jsr305.version>
+     <jsinterop.version>2.0.0</jsinterop.version>
+diff --git a/tests/tests/com/google/common/geometry/S2DensityTreeTest.java b/tests/tests/com/google/common/geometry/S2DensityTreeTest.java
+index 1afdd5b..825daf1 100644
+--- a/tests/tests/com/google/common/geometry/S2DensityTreeTest.java
++++ b/tests/tests/com/google/common/geometry/S2DensityTreeTest.java
+@@ -40,6 +40,7 @@ import java.util.Comparator;
+ import java.util.HashMap;
+ import java.util.IdentityHashMap;
+ import java.util.List;
++import java.util.AbstractMap;
+ import java.util.Map;
+ import java.util.Map.Entry;
+ import java.util.Random;
+@@ -505,7 +506,7 @@ public class S2DensityTreeTest extends GeometryTestCase {
+   private static Map<S2CellId, Long> sumToRoot(Map<S2CellId, Long> bases) {
+     return bases.keySet().stream()
+         .flatMap(cell -> IntStream.range(0, cell.level() + 1)
+-            .mapToObj(level -> Map.entry(cell.parent(level), bases.get(cell))))
++            .mapToObj(level -> new AbstractMap.SimpleEntry<S2CellId, Long>(cell.parent(level), bases.get(cell))))
+         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, Long::sum));
+   }
+ 
